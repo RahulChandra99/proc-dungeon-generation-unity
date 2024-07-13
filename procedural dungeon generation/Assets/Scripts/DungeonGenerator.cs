@@ -15,6 +15,7 @@ public class DungeonGenerator : MonoBehaviour
     {
        tileFrom = CreateStartTile();
        tileTo = CreateTile();
+       ConnectTiles();
 
     }
 
@@ -50,15 +51,19 @@ public class DungeonGenerator : MonoBehaviour
     void ConnectTiles()
     {
         Transform connectFrom = GetRandomConnector(tileFrom);
-        if (connectFrom == null)
-        {
-            return;
-        }
+        if (connectFrom == null) return;
+        
         Transform connectTo = GetRandomConnector(tileTo);
-        if (connectFrom == null)
-        {
-            return;
-        }
+        if (connectFrom == null) return;
+        
+        connectTo.SetParent(connectFrom);
+        tileTo.SetParent(connectTo);
+        connectTo.localPosition = Vector3.zero;
+        connectTo.localRotation = Quaternion.identity;
+        connectTo.Rotate(0, 180f, 0);
+        tileTo.SetParent(transform);
+        connectTo.SetParent(tileTo.Find("Connectors"));
+
     }
 
     private Transform GetRandomConnector(Transform tile)
